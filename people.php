@@ -27,6 +27,7 @@ session_start();
             </div>
         </form>
         <table class="table">
+            //When you click it sorts by attribute, double click switches direction
             <thead class="thead-light">
                 <tr>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'pid_desc' ? 'pid_asc' : 'pid_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">PID</a></th>
@@ -54,12 +55,12 @@ session_start();
 
                     $sql = "SELECT pid, name, nationality, dob, gender FROM People";
                     
-                    // Adding search condition
+                    // Adds name used for search
                     if(isset($_POST['name']) && !empty($_POST['name'])) {
                         $sql .= " WHERE name LIKE :name";
                     }
                     
-                    // Adding order by condition
+                    // Direction of ordering
                     $sql .= " ORDER BY $sort_field";
                     if ($sort_order === 'desc') {
                         $sql .= " DESC";
@@ -68,7 +69,7 @@ session_start();
                     }
 
                     $stmt = $conn->prepare($sql);
-                    // Binding search parameter if exists
+                    // Makes sure search stays consistent
                     if(isset($_POST['name']) && !empty($_POST['name'])) {
                         $stmt->bindValue(':name', '%' . $_POST['name'] . '%', PDO::PARAM_STR);
                     }
