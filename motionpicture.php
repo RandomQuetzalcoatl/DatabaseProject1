@@ -16,20 +16,30 @@ session_start();
     <div class="container">
         <h1 class="mt-5">Motion Pictures</h1>
         <p class="lead">List of all Motion Pictures:</p>
+        <form method="post" action="motionpicture.php" class="mb-3">
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" class="form-control" name="name" placeholder="Title" value="<?php echo isset($_POST['name']) ? $_POST['name'] : (isset($_GET['name']) ? urldecode($_GET['name']) : ''); ?>">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                    <th>MPID</th>
-                    <th>Name</th>
-                    <th>Rating</th>
-                    <th>Production</th>
-                    <th>Budget</th>
-                    <th>Like</th> <!-- New column for 'Like' button -->
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'mpid_desc' ? 'mpid_asc' : 'mpid_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">MPID</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'name_desc' ? 'name_asc' : 'name_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Name</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'rating_desc' ? 'rating_asc' : 'rating_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Rating</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'production_desc' ? 'production_asc' : 'production_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Production</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'budget_desc' ? 'budget_asc' : 'budget_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Budget</a></th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                // Using your provided database connection details
+                
                 $servername = "localhost";
                 $username = "root";
                 $password = "";
@@ -38,11 +48,33 @@ session_start();
                 try {
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    $sort = isset($_GET['sort']) ? $_GET['sort'] : 'rating_desc';
+                    $sort_arr = explode('_', $sort);
+                    $sort_field = $sort_arr[0];
+                    $sort_order = end($sort_arr);
 
-                    $stmt = $conn->prepare("SELECT mpid, name, rating, production, budget FROM MotionPicture");
+                    $sql = "SELECT mpid, name, rating, production, budget FROM MotionPicture";
+                    
+                    // Adding search condition
+                    if(isset($_POST['name']) && !empty($_POST['name'])) {
+                        $sql .= " WHERE name LIKE :name";
+                    }
+                    
+                    // Adding order by condition
+                    $sql .= " ORDER BY $sort_field";
+                    if ($sort_order === 'desc') {
+                        $sql .= " DESC";
+                    } else {
+                        $sql .= " ASC";
+                    }
+
+                    $stmt = $conn->prepare($sql);
+                    // Binding search parameter if exists
+                    if(isset($_POST['name']) && !empty($_POST['name'])) {
+                        $stmt->bindValue(':name', '%' . $_POST['name'] . '%', PDO::PARAM_STR);
+                    }
                     $stmt->execute();
 
-                    // Set the resulting array to associative
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($results as $row) {
                         echo "<tr>
@@ -51,36 +83,9 @@ session_start();
                                 <td>{$row['rating']}</td>
                                 <td>{$row['production']}</td>
                                 <td>{$row['budget']}</td>
-                                <td>";
-                        if (isset($_SESSION['user_email'])) {
-                            echo "<form method='post'>
-                                    <input type='hidden' name='mpid' value='{$row['mpid']}'>
-                                    <button type='submit' class='btn btn-primary' name='likeMovie'>Like</button>
-                                  </form>";
-                        } else {
-                            echo "Log in to like movies";
-                        }
-                        echo "</td></tr>";
+                              </tr>";
                     }
 
-                    if(isset($_POST['likeMovie']) && isset($_SESSION['user_email'])) {
-                        $userEmail = $_SESSION['user_email'];
-                        $mpid = $_POST['mpid'];
-
-                        // Check if like already exists
-                        $likeCheckStmt = $conn->prepare("SELECT * FROM Likes WHERE email = ? AND mpid = ?");
-                        $likeCheckStmt->execute([$userEmail, $mpid]);
-                        if(!$likeCheckStmt->fetch()) {
-                            // Insert like
-                            $stmt = $conn->prepare("INSERT INTO Likes (email, mpid) VALUES (?, ?)");
-                            $stmt->execute([$userEmail, $mpid]);
-                            echo "<div class='alert alert-success' role='alert'>You have liked the movie successfully!</div>";
-                            // Refresh page to update the like status
-                            echo "<meta http-equiv='refresh' content='0'>";
-                        } else {
-                            echo "<div class='alert alert-info' role='alert'>You have already liked this movie.</div>";
-                        }
-                    }
                 } catch(PDOException $e) {
                     echo "Error: " . $e->getMessage();
                 }
