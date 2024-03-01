@@ -1,6 +1,10 @@
 <?php
 // Start the session
 session_start();
+
+if(isset($_POST['name'])) {
+    $_SESSION['search_name'] = $_POST['name'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +23,7 @@ session_start();
         <form method="post" action="motionpicture.php" class="mb-3">
             <div class="form-row">
                 <div class="col">
-                    <input type="text" class="form-control" name="name" placeholder="Title" value="<?php echo isset($_POST['name']) ? $_POST['name'] : (isset($_GET['name']) ? urldecode($_GET['name']) : ''); ?>">
+                    <input type="text" class="form-control" name="name" placeholder="Title" value="<?php echo isset($_SESSION['search_name']) ? $_SESSION['search_name'] : '' ?>">
                 </div>
                 <div class="col">
                     <button type="submit" class="btn btn-primary">Filter</button>
@@ -30,17 +34,16 @@ session_start();
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                    //sorts by attribute clicked, clicking again swaps order
-                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'mpid_desc' ? 'mpid_asc' : 'mpid_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">MPID</a></th>
-                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'name_desc' ? 'name_asc' : 'name_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Name</a></th>
-                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'rating_desc' ? 'rating_asc' : 'rating_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Rating</a></th>
-                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'production_desc' ? 'production_asc' : 'production_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Production</a></th>
-                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'budget_desc' ? 'budget_asc' : 'budget_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Budget</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'mpid_desc' ? 'mpid_asc' : 'mpid_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">MPID</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'name_desc' ? 'name_asc' : 'name_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Name</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'rating_desc' ? 'rating_asc' : 'rating_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Rating</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'production_desc' ? 'production_asc' : 'production_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Production</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'budget_desc' ? 'budget_asc' : 'budget_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Budget</a></th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                
+                // Using your provided database connection details
                 $servername = "localhost";
                 $username = "root";
                 $password = "";
@@ -56,12 +59,11 @@ session_start();
 
                     $sql = "SELECT mpid, name, rating, production, budget FROM MotionPicture";
                     
-                    // Searches by name
-                    if(isset($_POST['name']) && !empty($_POST['name'])) {
+                    if(isset($_SESSION['search_name']) && !empty($_SESSION['search_name'])) {
                         $sql .= " WHERE name LIKE :name";
                     }
                     
-                    // Order of sort
+                    // Sort Order
                     $sql .= " ORDER BY $sort_field";
                     if ($sort_order === 'desc') {
                         $sql .= " DESC";
@@ -69,11 +71,9 @@ session_start();
                         $sql .= " ASC";
                     }
 
-                            
                     $stmt = $conn->prepare($sql);
-                    // Maintains search when sorting
-                    if(isset($_POST['name']) && !empty($_POST['name'])) {
-                        $stmt->bindValue(':name', '%' . $_POST['name'] . '%', PDO::PARAM_STR);
+                    if(isset($_SESSION['search_name']) && !empty($_SESSION['search_name'])) {
+                        $stmt->bindValue(':name', '%' . $_SESSION['search_name'] . '%', PDO::PARAM_STR);
                     }
                     $stmt->execute();
 
