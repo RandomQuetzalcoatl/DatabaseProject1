@@ -10,7 +10,29 @@
 <body>
     <div class="container">
         <h1 class="mt-5">Locations</h1>
-        <p class="lead">List of all Filming Locations:</p>
+        <p class="lead">Filter and List of all Filming Locations:</p>
+
+        <!-- Filter Form -->
+        <form method="post" action="locations.php" class="mb-3">
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" class="form-control" name="filterMPID" placeholder="MPID">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="filterZip" placeholder="Zip">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="filterCity" placeholder="City">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" name="filterCountry" placeholder="Country">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </div>
+        </form>
+
         <table class="table">
             <thead class="thead-light">
                 <tr>
@@ -32,17 +54,46 @@
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    $stmt = $conn->prepare("SELECT mpid, zip, city, country FROM Location");
-                    $stmt->execute();
+                    // Construct SQL query based on filters
+                    $sql = "SELECT mpid, zip, city, country FROM Location WHERE 1 = 1";
+                    if (!empty($_POST['filterMPID'])) {
+                        $sql .= " AND mpid LIKE :mpid";
+                    }
+                    if (!empty($_POST['filterZip'])) {
+                        $sql .= " AND zip LIKE :zip";
+                    }
+                    if (!empty($_POST['filterCity'])) {
+                        $sql .= " AND city LIKE :city";
+                    }
+                    if (!empty($_POST['filterCountry'])) {
+                        $sql .= " AND country LIKE :country";
+                    }
 
-                    // Set the resulting array to associative
+                    $stmt = $conn->prepare($sql);
+
+                    // Binding parameters
+                    if (!empty($_POST['filterMPID'])) {
+                        $stmt->bindValue(':mpid', "%".$_POST['filterMPID']."%");
+                    }
+                    if (!empty($_POST['filterZip'])) {
+                        $stmt->bindValue(':zip', "%".$_POST['filterZip']."%");
+                    }
+                    if (!empty($_POST['filterCity'])) {
+                        $stmt->bindValue(':city', "%".$_POST['filterCity']."%");
+                    }
+                    if (!empty($_POST['filterCountry'])) {
+                        $stmt->bindValue(':country', "%".$_POST['filterCountry']."%");
+                    }
+
+                    $stmt->execute();
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
                     foreach ($results as $row) {
                         echo "<tr>
-                                <td>{$row['mpid']}</td>
-                                <td>{$row['zip']}</td>
-                                <td>{$row['city']}</td>
-                                <td>{$row['country']}</td>
+                                <td>".htmlspecialchars($row['mpid'])."</td>
+                                <td>".htmlspecialchars($row['zip'])."</td>
+                                <td>".htmlspecialchars($row['city'])."</td>
+                                <td>".htmlspecialchars($row['country'])."</td>
                               </tr>";
                     }
                 } catch(PDOException $e) {

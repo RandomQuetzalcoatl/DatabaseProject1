@@ -10,8 +10,32 @@
 <body>
     <div class="container">
         <h1 class="mt-5">Genres</h1>
-        <p class="lead">List of all Genres:</p>
-        <table class="table">
+        <p class="lead">Filter by Genre:</p>
+
+        <!-- Genre filter form -->
+        <form method="post" action="genre.php" class="mb-3">
+            <div class="form-group">
+                <label for="genreText">Genre name:</label>
+                <input type="text" class="form-control" id="genreText" name="genreText" placeholder="Enter genre name">
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="genres[]" value="Action" id="Action">
+                <label class="form-check-label" for="Action">Action</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="genres[]" value="Drama" id="Drama">
+                <label class="form-check-label" for="Drama">Drama</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="genres[]" value="Comedy" id="Comedy">
+                <label class="form-check-label" for="Comedy">Comedy</label>
+            </div>
+            <!-- Add more genres as needed -->
+            <button type="submit" class="btn btn-primary mt-3">Filter</button>
+        </form>
+
+        <h2 class="mt-5">List of Genres:</h2>
+        <table class="table mt-3">
             <thead class="thead-light">
                 <tr>
                     <th>MPID</th>
@@ -20,7 +44,7 @@
             </thead>
             <tbody>
                 <?php
-                // Using your provided database connection details
+                // Database connection details
                 $servername = "localhost";
                 $username = "root";
                 $password = "";
@@ -30,15 +54,28 @@
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    $stmt = $conn->prepare("SELECT mpid, genre_name FROM Genre");
-                    $stmt->execute();
+                    $sql = "SELECT mpid, genre_name FROM Genre WHERE 1=1";
+                    $params = [];
+                    if (!empty($_POST['genreText'])) {
+                        $sql .= " AND genre_name LIKE :genreText";
+                        $params[':genreText'] = "%" . $_POST['genreText'] . "%";
+                    }
+                    if (!empty($_POST['genres'])) {
+                        $sql .= " AND genre_name IN ('" . implode("', '", array_map('htmlspecialchars', $_POST['genres'])) . "')";
+                    }
 
-                    // Set the resulting array to associative
+                    $stmt = $conn->prepare($sql);
+                    // Bind parameters
+                    if (!empty($_POST['genreText'])) {
+                        $stmt->bindParam(':genreText', $params[':genreText']);
+                    }
+                    $stmt->execute();
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
                     foreach ($results as $row) {
                         echo "<tr>
-                                <td>{$row['mpid']}</td>
-                                <td>{$row['genre_name']}</td>
+                                <td>" . htmlspecialchars($row['mpid']) . "</td>
+                                <td>" . htmlspecialchars($row['genre_name']) . "</td>
                               </tr>";
                     }
                 } catch(PDOException $e) {

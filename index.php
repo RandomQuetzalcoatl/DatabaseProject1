@@ -48,12 +48,6 @@ try {
         <!-- Welcome message -->
         <?php if ($userLoggedIn): ?>
             <h1 class="mt-5">Welcome, <?php echo htmlspecialchars($_SESSION['user_email']); ?></h1>
-            <h2>Your Liked Movies:</h2>
-            <ul>
-                <?php foreach ($userLikes as $like): ?>
-                    <li><?php echo htmlspecialchars($like['name']); ?></li>
-                <?php endforeach; ?>
-            </ul>
         <?php else: ?>
             <h1 class="mt-5">Welcome, Guest</h1>
             <p>Please <a href="login.php">login</a> to see your liked movies.</p>
@@ -62,10 +56,13 @@ try {
         <h1 class="mt-5">Database Management Dashboard</h1>
         <p class="lead">Select a category to view or manage:</p>
         <div class="list-group">
+            <a href="like.php" class="list-group-item list-group-item-action">Show my Likes</a>
+            <a href="userprofile.php" class="list-group-item list-group-item-action">User Profile</a>
+            <a href="user.php" class="list-group-item list-group-item-action">Show all Users (Temporary exist, won't exist for users)</a>
             <a href="motionpicture.php" class="list-group-item list-group-item-action">View all Motion Pictures</a>
             <a href="movie.php" class="list-group-item list-group-item-action">View all Movies</a>
             <a href="series.php" class="list-group-item list-group-item-action">View all Series</a>
-            <a href="people.php" class="list-group-item list-group-item-action">View all Actors</a>
+            <a href="people.php" class="list-group-item list-group-item-action">View all People</a>
             <a href="role.php" class="list-group-item list-group-item-action">View by Roles</a>
             <a href="award.php" class="list-group-item list-group-item-action">View by Awards</a>
             <a href="genre.php" class="list-group-item list-group-item-action">View by Genres</a>
@@ -74,6 +71,8 @@ try {
         <!-- Login/Register Button -->
         <div class="mt-4">
             <a href="login.php" class="btn btn-primary">Login/Register</a>
+            <a href="movie.php" class="btn btn-primary">View all Movies</a>
+            <a href="role.php?role_name=Actor" class="btn btn-primary">View all Actors</a>
         </div>
     </div>
 

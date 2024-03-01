@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 29, 2024 at 01:33 AM
+-- Generation Time: Mar 01, 2024 at 05:54 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -45,6 +45,13 @@ CREATE TABLE `Genre` (
   `genre_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `Genre`
+--
+
+INSERT INTO `Genre` (`mpid`, `genre_name`) VALUES
+(1, 'Action');
+
 -- --------------------------------------------------------
 
 --
@@ -78,6 +85,16 @@ CREATE TABLE `Likes` (
   `mpid` int(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `Likes`
+--
+
+INSERT INTO `Likes` (`email`, `mpid`) VALUES
+('hello@gmail.com', 1),
+('hello@gmail.com', 2),
+('hi@gmail.com', 1),
+('hi@gmail.com', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -105,6 +122,14 @@ CREATE TABLE `MotionPicture` (
   `budget` decimal(15,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `MotionPicture`
+--
+
+INSERT INTO `MotionPicture` (`mpid`, `name`, `rating`, `production`, `budget`) VALUES
+(1, 'Harry Potter', 10, 'Columbia', 12000000.00),
+(2, 'Titanic', 9, 'Disney', 5000000.00);
+
 -- --------------------------------------------------------
 
 --
@@ -130,6 +155,14 @@ CREATE TABLE `People` (
   `gender` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `People`
+--
+
+INSERT INTO `People` (`pid`, `name`, `nationality`, `dob`, `gender`) VALUES
+(1, 'Emma', 'British', '2024-03-01', 'Female'),
+(2, 'John', 'British', '2023-03-09', 'Male');
+
 -- --------------------------------------------------------
 
 --
@@ -141,6 +174,14 @@ CREATE TABLE `Role` (
   `mpid` int(20) NOT NULL,
   `role_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `Role`
+--
+
+INSERT INTO `Role` (`pid`, `mpid`, `role_name`) VALUES
+(1, 1, 'Actor'),
+(2, 2, 'Director');
 
 -- --------------------------------------------------------
 
@@ -161,9 +202,20 @@ CREATE TABLE `Series` (
 
 CREATE TABLE `User` (
   `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `age` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `User`
+--
+
+INSERT INTO `User` (`email`, `password`, `name`, `age`) VALUES
+('a@gmail.com', '', 'john', 3),
+('b@gmail.com', '', 'john', 26),
+('hello@gmail.com', '$2y$10$wmmG7YvOOSRketrHDif5hO38.aEPuQSW9Q2f1Tp8pqiB0PkNoTg2.', NULL, NULL),
+('hi@gmail.com', '$2y$10$c3KzEW2ac9TM04Sy7vRGx.uoLVN5eMLT/VLUT/lD4mq7JoiF8AC0m', NULL, NULL);
 
 --
 -- Indexes for dumped tables
