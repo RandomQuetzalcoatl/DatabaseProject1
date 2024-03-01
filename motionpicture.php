@@ -30,6 +30,7 @@ session_start();
         <table class="table">
             <thead class="thead-light">
                 <tr>
+                    //sorts by attribute clicked, clicking again swaps order
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'mpid_desc' ? 'mpid_asc' : 'mpid_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">MPID</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'name_desc' ? 'name_asc' : 'name_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Name</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'rating_desc' ? 'rating_asc' : 'rating_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Rating</a></th>
@@ -55,12 +56,12 @@ session_start();
 
                     $sql = "SELECT mpid, name, rating, production, budget FROM MotionPicture";
                     
-                    // Adding search condition
+                    // Searches by name
                     if(isset($_POST['name']) && !empty($_POST['name'])) {
                         $sql .= " WHERE name LIKE :name";
                     }
                     
-                    // Adding order by condition
+                    // Order of sort
                     $sql .= " ORDER BY $sort_field";
                     if ($sort_order === 'desc') {
                         $sql .= " DESC";
@@ -68,8 +69,9 @@ session_start();
                         $sql .= " ASC";
                     }
 
+                            
                     $stmt = $conn->prepare($sql);
-                    // Binding search parameter if exists
+                    // Maintains search when sorting
                     if(isset($_POST['name']) && !empty($_POST['name'])) {
                         $stmt->bindValue(':name', '%' . $_POST['name'] . '%', PDO::PARAM_STR);
                     }
