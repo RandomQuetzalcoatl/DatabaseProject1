@@ -8,7 +8,7 @@ $userLoggedIn = isset($_SESSION['user_email']);
 // Database connection details
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "new_password";
 $dbname = "COSI127b";
 
 // Connect to database
@@ -59,7 +59,7 @@ try {
             <a href="like.php" class="list-group-item list-group-item-action">Show my Likes</a>
             <a href="userprofile.php" class="list-group-item list-group-item-action">User Profile</a>
             <a href="user.php" class="list-group-item list-group-item-action">Show all Users (Temporary exist, won't exist for users)</a>
-            <a href="motionpicture.php" class="list-group-item list-group-item-action">View all Motion Pictures</a>
+            <a href="motionpicture.php?sort=name_asc.php" class="list-group-item list-group-item-action">View all Motion Pictures</a>
             <a href="movie.php" class="list-group-item list-group-item-action">View all Movies</a>
             <a href="series.php" class="list-group-item list-group-item-action">View all Series</a>
             <a href="people.php" class="list-group-item list-group-item-action">View all People</a>
