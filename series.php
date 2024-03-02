@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Series</title>
+    <title>Movies</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-5">Series</h1>
-        <p class="lead">List of all Series and their Season Counts:</p>
-        <form method="post" action="series.php" class="mb-3">
+        <h1 class="mt-5">Movies</h1>
+        <p class="lead">List of all Movies and their Box Office Collections:</p>
+        <form method="post" action="movie.php" class="mb-3">
             <div class="form-row">
                 <div class="col">
                     <input type="text" class="form-control" name="name" placeholder="Title" value="<?php echo isset($_POST['name']) ? $_POST['name'] : (isset($_GET['name']) ? htmlspecialchars($_GET['name']) : ''); ?>">
@@ -26,13 +26,13 @@
                 <tr>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'mpid_desc' ? 'mpid_asc' : 'mpid_desc'; ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">MPID</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'name_desc' ? 'name_asc' : 'name_desc'; ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Name</a></th>
-                    <th>Season Count</th>
-                     <!--<th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'season_count_desc' ? 'season_count_asc' : 'season_count_desc'; ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Season Count</a></th> -->
+                    <th>Box Office Collection</th>
+                    <!--<th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'boxoffice_collection_desc' ? 'boxoffice_collection_asc' : 'boxoffice_collection_desc'; ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Box Office Collection</a></th> -->
                 </tr>
             </thead>
             <tbody>
                 <?php
-                // Using your provided database connection details
+                // Replace with your actual database connection information
                 $servername = "localhost";
                 $username = "root";
                 $password = "new_password";
@@ -40,13 +40,14 @@
 
                 try {
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+                    // Set the PDO error mode to exception
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     $sort = isset($_GET['sort']) ? $_GET['sort'] : 'mpid_desc';
                     $sort_arr = explode('_', $sort);
                     $sort_field = $sort_arr[0];
                     $sort_order = end($sort_arr);
 
-                    $sql = "SELECT Series.mpid, MotionPicture.name, Series.season_count FROM Series INNER JOIN MotionPicture ON Series.mpid = MotionPicture.mpid";
+                    $sql = "SELECT Movie.mpid, MotionPicture.name, Movie.boxoffice_collection FROM Movie INNER JOIN MotionPicture ON Movie.mpid = MotionPicture.mpid";
                     
                     // Adding search condition
                     if(isset($_POST['name']) && !empty($_POST['name'])) {
@@ -73,7 +74,7 @@
                         echo "<tr>
                                 <td>{$row['mpid']}</td>
                                 <td>{$row['name']}</td>
-                                <td>{$row['season_count']}</td>
+                                <td>{$row['boxoffice_collection']}</td>
                               </tr>";
                     }
 
