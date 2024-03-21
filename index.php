@@ -67,6 +67,21 @@ try {
             <a href="award.php" class="list-group-item list-group-item-action">View by Awards</a>
             <a href="genre.php" class="list-group-item list-group-item-action">View by Genres</a>
             <a href="location.php" class="list-group-item list-group-item-action">View by Locations</a>
+            <a href="query1.php" class="list-group-item list-group-item-action">Query 1</a>
+            <a href="query2.php" class="list-group-item list-group-item-action">Query 2</a>
+            <a href="query3.php" class="list-group-item list-group-item-action">Query 3</a>
+            <a href="query4.php" class="list-group-item list-group-item-action">Query 4</a>
+            <a href="query5.php" class="list-group-item list-group-item-action">Query 5</a>
+            <a href="query6.php" class="list-group-item list-group-item-action">Query 6</a>
+            <a href="query7.php" class="list-group-item list-group-item-action">Query 7</a>
+            <a href="query8.php" class="list-group-item list-group-item-action">Query 8</a>
+            <a href="query9.php" class="list-group-item list-group-item-action">Query 9</a>
+            <a href="query10.php" class="list-group-item list-group-item-action">Query 10</a>
+            <a href="query11.php" class="list-group-item list-group-item-action">Query 11</a>
+            <a href="query12.php" class="list-group-item list-group-item-action">Query 12</a>
+            <a href="query13.php" class="list-group-item list-group-item-action">Query 13</a>
+            <a href="query14.php" class="list-group-item list-group-item-action">Query 14</a>
+            <a href="query14.php" class="list-group-item list-group-item-action">Query 15</a>
         </div>
         <!-- Login/Register Button -->
         <div class="mt-4">
