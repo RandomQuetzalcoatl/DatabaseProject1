@@ -1,8 +1,13 @@
 <?php
+
 // Start session at the beginning of the script
 session_start();
 
 // Include database connection code here (or use require_once if it's in a separate file)
+$servername = "localhost";
+$username = "root";
+$con_password = "new_password";
+$dbname = "COSI127b";
 
 if(isset($_POST['loginUser'])) {
     // Login logic
@@ -10,7 +15,7 @@ if(isset($_POST['loginUser'])) {
     $password = $_POST['loginPassword'];
 
     try {
-        $conn = new PDO("mysql:host=localhost;dbname=COSI127b", "root", "");
+        $conn = new PDO("mysql:host=localhost;dbname=COSI127b", $username, $con_password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $stmt = $conn->prepare("SELECT email, password FROM User WHERE email = ?");
@@ -38,7 +43,7 @@ if(isset($_POST['registerUser'])) {
     $password = $_POST['registerPassword'];
 
     try {
-        $conn = new PDO("mysql:host=localhost;dbname=COSI127b", "root", "");
+        $conn = new PDO("mysql:host=localhost;dbname=COSI127b", $username, $con_password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Check if user already exists
@@ -110,7 +115,7 @@ if(isset($_POST['registerUser'])) {
         $password = $_POST['loginPassword'];
 
         try {
-            $conn = new PDO("mysql:host=localhost;dbname=COSI127b", "root", "");
+            $conn = new PDO("mysql:host=localhost;dbname=COSI127b", $username, $con_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $stmt = $conn->prepare("SELECT email, password FROM User WHERE email = ?");
@@ -134,7 +139,7 @@ if(isset($_POST['registerUser'])) {
         $password = $_POST['registerPassword']; // In a real application, validate this!
 
         try {
-            $conn = new PDO("mysql:host=localhost;dbname=COSI127b", "root", "");
+            $conn = new PDO("mysql:host=localhost;dbname=COSI127b", $username, $con_password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Check if user already exists
