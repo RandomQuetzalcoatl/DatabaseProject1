@@ -34,7 +34,7 @@ if(isset($_POST['name'])) {
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'mpid_desc' ? 'mpid_asc' : 'mpid_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">MPID</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'id_desc' ? 'id_asc' : 'id_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">ID</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'name_desc' ? 'name_asc' : 'name_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Name</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'rating_desc' ? 'rating_asc' : 'rating_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Rating</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'production_desc' ? 'production_asc' : 'production_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Production</a></th>
@@ -46,7 +46,7 @@ if(isset($_POST['name'])) {
                 // Using your provided database connection details
                 $servername = "localhost";
                 $username = "root";
-                $password = "";
+                $password = "new_password";
                 $dbname = "COSI127b";
 
                 try {
@@ -57,7 +57,7 @@ if(isset($_POST['name'])) {
                     $sort_field = $sort_arr[0];
                     $sort_order = end($sort_arr);
 
-                    $sql = "SELECT mpid, name, rating, production, budget FROM MotionPicture";
+                    $sql = "SELECT id, name, rating, production, budget FROM MotionPicture";
                     
                     if(isset($_SESSION['search_name']) && !empty($_SESSION['search_name'])) {
                         $sql .= " WHERE name LIKE :name";
@@ -80,7 +80,7 @@ if(isset($_POST['name'])) {
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($results as $row) {
                         echo "<tr>
-                                <td>{$row['mpid']}</td>
+                                <td>{$row['id']}</td>
                                 <td>{$row['name']}</td>
                                 <td>{$row['rating']}</td>
                                 <td>{$row['production']}</td>
