@@ -31,7 +31,7 @@ if(!isset($_SESSION["user_email"])){
                 // Database connection details
                 $servername = "localhost";
                 $username = "root";
-                $password = "new_password";
+                $password = "";
                 $dbname = "COSI127b";
                 $userEmail = $_SESSION["user_email"]; // Get the user's email from the session.
 

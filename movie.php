@@ -35,7 +35,7 @@
                 // Replace with your actual database connection information
                 $servername = "localhost";
                 $username = "root";
-                $password = "new_password";
+                $password = "";
                 $dbname = "COSI127b";
 
                 try {

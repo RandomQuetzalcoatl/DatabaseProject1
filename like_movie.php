@@ -31,7 +31,7 @@
                         $stmt->execute();
                         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($results as $row) {
-                            echo "<option value='{$row['id']}'>{$row['name']}</option>";
+                            echo "<option value='{$row['mpid']}'>{$row['name']}</option>";
                         }
                     } catch(PDOException $e) {
                         echo "Error: " . $e->getMessage();
@@ -53,7 +53,7 @@
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Check if the user already liked the movie
-            $checkStmt = $conn->prepare("SELECT * FROM Likes WHERE uemail = :email AND mpid = :id");
+            $checkStmt = $conn->prepare("SELECT * FROM Likes WHERE uemail = :email AND mpid = :mpid");
             $checkStmt->execute(['email' => $userEmail, 'mpid' => $movieId]);
             $alreadyLiked = $checkStmt->fetch();
 

@@ -10,7 +10,7 @@ if (!isset($_SESSION["user_email"])) {
 // Prepare database connection variables
 $servername = "localhost";
 $username = "root";
-$password = "new_password";
+$password = "";
 $dbname = "COSI127b";
 $userEmail = $_SESSION["user_email"]; // Get the user's email from the session.
 
@@ -65,7 +65,7 @@ try {
             <tbody>
                 <?php foreach ($userLikes as $like): ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($like['mpid']); ?></td>
+                        <td><?php echo htmlspecialchars($like['id']); ?></td>
                         <td><?php echo htmlspecialchars($like['name']); ?></td>
                     </tr>
                 <?php endforeach; ?>
