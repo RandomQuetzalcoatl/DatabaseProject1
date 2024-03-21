@@ -47,7 +47,7 @@
                     $sort_field = $sort_arr[0];
                     $sort_order = end($sort_arr);
 
-                    $sql = "SELECT Movie.mpid, MotionPicture.name, Movie.boxoffice_collection FROM Movie INNER JOIN MotionPicture ON Movie.mpid = MotionPicture.mpid";
+                    $sql = "SELECT Movie.mpid, MotionPicture.name, Movie.boxoffice_collection FROM Movie INNER JOIN MotionPicture ON Movie.mpid = MotionPicture.id";
                     
                     // Adding search condition
                     if(isset($_POST['name']) && !empty($_POST['name'])) {

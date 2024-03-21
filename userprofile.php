@@ -10,7 +10,7 @@ if (!isset($_SESSION["user_email"])) {
 // Prepare database connection variables
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "new_password";
 $dbname = "COSI127b";
 $userEmail = $_SESSION["user_email"]; // Get the user's email from the session.
 
@@ -26,7 +26,7 @@ try {
     $userInfo = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
     // Fetch user's liked movies
-    $stmtLikes = $conn->prepare("SELECT MotionPicture.mpid, MotionPicture.name FROM Likes JOIN MotionPicture ON Likes.mpid = MotionPicture.mpid WHERE Likes.email = :email");
+    $stmtLikes = $conn->prepare("SELECT MotionPicture.id, MotionPicture.name FROM Likes JOIN MotionPicture ON Likes.mpid = MotionPicture.id WHERE Likes.email = :email");
     $stmtLikes->bindParam(':email', $userEmail);
     $stmtLikes->execute();
     $userLikes = $stmtLikes->fetchAll(PDO::FETCH_ASSOC);

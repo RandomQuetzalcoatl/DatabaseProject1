@@ -27,10 +27,9 @@ session_start();
             </div>
         </form>
         <table class="table">
-            //When you click it sorts by attribute, double click switches direction
             <thead class="thead-light">
                 <tr>
-                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'pid_desc' ? 'pid_asc' : 'pid_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">PID</a></th>
+                    <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'id_desc' ? 'id_asc' : 'id_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">ID</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'name_desc' ? 'name_asc' : 'name_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Name</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'nationality_desc' ? 'nationality_asc' : 'nationality_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Nationality</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'dob_desc' ? 'dob_asc' : 'dob_desc' ?>&name=<?php echo isset($_POST['name']) ? urlencode($_POST['name']) : (isset($_GET['name']) ? $_GET['name'] : ''); ?>">Date of Birth</a></th>
@@ -42,25 +41,25 @@ session_start();
                 // Using your provided database connection details
                 $servername = "localhost";
                 $username = "root";
-                $password = "";
+                $password = "new_password";
                 $dbname = "COSI127b";
 
                 try {
                     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $sort = isset($_GET['sort']) ? $_GET['sort'] : 'pid_desc';
+                    $sort = isset($_GET['sort']) ? $_GET['sort'] : 'id_desc';
                     $sort_arr = explode('_', $sort);
                     $sort_field = $sort_arr[0];
                     $sort_order = end($sort_arr);
 
-                    $sql = "SELECT pid, name, nationality, dob, gender FROM People";
+                    $sql = "SELECT id, name, nationality, dob, gender FROM People";
                     
-                    // Adds name used for search
+                    // Adding search condition
                     if(isset($_POST['name']) && !empty($_POST['name'])) {
                         $sql .= " WHERE name LIKE :name";
                     }
                     
-                    // Direction of ordering
+                    // Adding order by condition
                     $sql .= " ORDER BY $sort_field";
                     if ($sort_order === 'desc') {
                         $sql .= " DESC";
@@ -69,7 +68,7 @@ session_start();
                     }
 
                     $stmt = $conn->prepare($sql);
-                    // Makes sure search stays consistent
+                    // Binding search parameter if exists
                     if(isset($_POST['name']) && !empty($_POST['name'])) {
                         $stmt->bindValue(':name', '%' . $_POST['name'] . '%', PDO::PARAM_STR);
                     }
@@ -78,7 +77,7 @@ session_start();
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($results as $row) {
                         echo "<tr>
-                                <td>{$row['pid']}</td>
+                                <td>{$row['id']}</td>
                                 <td>{$row['name']}</td>
                                 <td>{$row['nationality']}</td>
                                 <td>{$row['dob']}</td>

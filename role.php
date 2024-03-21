@@ -45,7 +45,7 @@
                     $sort_field = $sort_arr[0];
                     $sort_order = end($sort_arr);
 
-                    $sql = "SELECT People.pid, People.name, Role.role_name FROM People JOIN Role ON People.pid = Role.pid";
+                    $sql = "SELECT mpid, pid, role_name FROM Role";
                     
                     // Adding search condition
                     if(isset($_GET['role_name']) && !empty($_GET['role_name'])) {
@@ -74,8 +74,8 @@
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($results as $row) {
                         echo "<tr>
+                                <td>{$row['mpid']}</td>
                                 <td>{$row['pid']}</td>
-                                <td>{$row['name']}</td>
                                 <td>{$row['role_name']}</td>
                               </tr>";
                     }
