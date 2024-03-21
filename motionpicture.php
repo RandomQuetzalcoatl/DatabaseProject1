@@ -39,6 +39,7 @@ if(isset($_POST['name'])) {
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'rating_desc' ? 'rating_asc' : 'rating_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Rating</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'production_desc' ? 'production_asc' : 'production_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Production</a></th>
                     <th><a href="?sort=<?php echo isset($_GET['sort']) && $_GET['sort'] === 'budget_desc' ? 'budget_asc' : 'budget_desc' ?>&name=<?php echo isset($_SESSION['search_name']) ? urlencode($_SESSION['search_name']) : '' ?>">Budget</a></th>
+                    <th>Like</th>
                 </tr>
             </thead>
             <tbody>
@@ -46,7 +47,7 @@ if(isset($_POST['name'])) {
                 // Using your provided database connection details
                 $servername = "localhost";
                 $username = "root";
-                $password = "new_password";
+                $password = "";
                 $dbname = "COSI127b";
 
                 try {
@@ -85,7 +86,36 @@ if(isset($_POST['name'])) {
                                 <td>{$row['rating']}</td>
                                 <td>{$row['production']}</td>
                                 <td>{$row['budget']}</td>
+                                <td>";
+                        if (isset($_SESSION['user_email'])) {
+                            echo "<form method='post'>
+                                    <input type='hidden' name='mpid' value='{$row['mpid']}'>
+                                    <button type='submit' class='btn btn-primary' name='likeMovie'>Like</button>
+                                  </form>";
+                        } else {
+                            echo "Log in to like movies";
+                        }
+                        echo "</td>
                               </tr>";
+                    }
+
+                    if(isset($_POST['likeMovie']) && isset($_SESSION['user_email'])) {
+                        $userEmail = $_SESSION['user_email'];
+                        $mpid = $_POST['mpid'];
+
+                        // Check if like already exists
+                        $likeCheckStmt = $conn->prepare("SELECT * FROM Likes WHERE email = ? AND mpid = ?");
+                        $likeCheckStmt->execute([$userEmail, $mpid]);
+                        if(!$likeCheckStmt->fetch()) {
+                            // Insert like
+                            $stmt = $conn->prepare("INSERT INTO Likes (email, mpid) VALUES (?, ?)");
+                            $stmt->execute([$userEmail, $mpid]);
+                            echo "<div class='alert alert-success' role='alert'>You have liked the movie successfully!</div>";
+                            // Refresh page to update the like status
+                            echo "<meta http-equiv='refresh' content='0'>";
+                        } else {
+                            echo "<div class='alert alert-info' role='alert'>You have already liked this movie.</div>";
+                        }
                     }
 
                 } catch(PDOException $e) {
