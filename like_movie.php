@@ -27,11 +27,11 @@
                     try {
                         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
                         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        $stmt = $conn->prepare("SELECT mpid, name FROM MotionPicture");
+                        $stmt = $conn->prepare("SELECT id, name FROM MotionPicture");
                         $stmt->execute();
                         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         foreach ($results as $row) {
-                            echo "<option value='{$row['mpid']}'>{$row['name']}</option>";
+                            echo "<option value='{$row['id']}'>{$row['name']}</option>";
                         }
                     } catch(PDOException $e) {
                         echo "Error: " . $e->getMessage();
@@ -53,13 +53,13 @@
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Check if the user already liked the movie
-            $checkStmt = $conn->prepare("SELECT * FROM Likes WHERE email = :email AND mpid = :mpid");
+            $checkStmt = $conn->prepare("SELECT * FROM Likes WHERE uemail = :email AND mpid = :id");
             $checkStmt->execute(['email' => $userEmail, 'mpid' => $movieId]);
             $alreadyLiked = $checkStmt->fetch();
 
             if (!$alreadyLiked) {
                 // Insert new like
-                $likeStmt = $conn->prepare("INSERT INTO Likes (email, mpid) VALUES (:email, :mpid)");
+                $likeStmt = $conn->prepare("INSERT INTO Likes (uemail, mpid) VALUES (:email, :mpid)");
                 $likeStmt->execute(['email' => $userEmail, 'mpid' => $movieId]);
                 echo "<div class='alert alert-success' role='alert'>You liked the movie successfully!</div>";
             } else {

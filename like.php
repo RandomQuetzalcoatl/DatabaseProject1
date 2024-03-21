@@ -40,7 +40,7 @@ if(!isset($_SESSION["user_email"])){
                     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                     // SQL query to fetch likes for the logged-in user
-                    $stmt = $conn->prepare("SELECT MotionPicture.mpid, MotionPicture.name FROM Likes JOIN MotionPicture ON Likes.mpid = MotionPicture.mpid WHERE Likes.email = :email");
+                    $stmt = $conn->prepare("SELECT MotionPicture.id, MotionPicture.name FROM Likes JOIN MotionPicture ON Likes.mpid = MotionPicture.id WHERE Likes.email = :email");
                     $stmt->bindParam(':email', $userEmail);
                     $stmt->execute();
 

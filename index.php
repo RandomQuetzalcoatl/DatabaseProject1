@@ -8,7 +8,7 @@ $userLoggedIn = isset($_SESSION['user_email']);
 // Database connection details
 $servername = "localhost";
 $username = "root";
-$password = "new_password";
+$password = "";
 $dbname = "COSI127b";
 
 // Connect to database
@@ -19,7 +19,7 @@ try {
     // If user is logged in, fetch their likes
     $userLikes = [];
     if ($userLoggedIn) {
-        $stmt = $conn->prepare("SELECT MotionPicture.name FROM Likes JOIN MotionPicture ON Likes.mpid = MotionPicture.mpid WHERE Likes.email = ?");
+        $stmt = $conn->prepare("SELECT MotionPicture.name FROM Likes JOIN MotionPicture ON Likes.mpid = MotionPicture.id WHERE Likes.email = ?");
         $stmt->execute([$_SESSION['user_email']]);
         $userLikes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
