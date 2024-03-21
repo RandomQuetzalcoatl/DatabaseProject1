@@ -31,7 +31,7 @@ if(!isset($_SESSION["user_email"])){
                 // Database connection details
                 $servername = "localhost";
                 $username = "root";
-                $password = "";
+                $password = "new_password";
                 $dbname = "COSI127b";
                 $userEmail = $_SESSION["user_email"]; // Get the user's email from the session.
 
@@ -48,7 +48,7 @@ if(!isset($_SESSION["user_email"])){
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($results as $row) {
                         echo "<tr>
-                                <td>" . htmlspecialchars($row['mpid']) . "</td>
+                                <td>" . htmlspecialchars($row['id']) . "</td>
                                 <td>" . htmlspecialchars($row['name']) . "</td>
                               </tr>";
                     }

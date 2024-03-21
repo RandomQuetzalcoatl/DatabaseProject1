@@ -47,7 +47,7 @@ if(isset($_POST['name'])) {
                 // Using your provided database connection details
                 $servername = "localhost";
                 $username = "root";
-                $password = "";
+                $password = "new_password";
                 $dbname = "COSI127b";
 
                 try {
@@ -89,7 +89,7 @@ if(isset($_POST['name'])) {
                                 <td>";
                         if (isset($_SESSION['user_email'])) {
                             echo "<form method='post'>
-                                    <input type='hidden' name='mpid' value='{$row['mpid']}'>
+                                    <input type='hidden' name='id' value='{$row['id']}'>
                                     <button type='submit' class='btn btn-primary' name='likeMovie'>Like</button>
                                   </form>";
                         } else {
@@ -101,7 +101,7 @@ if(isset($_POST['name'])) {
 
                     if(isset($_POST['likeMovie']) && isset($_SESSION['user_email'])) {
                         $userEmail = $_SESSION['user_email'];
-                        $mpid = $_POST['mpid'];
+                        $mpid = $_POST['id'];
 
                         // Check if like already exists
                         $likeCheckStmt = $conn->prepare("SELECT * FROM Likes WHERE email = ? AND mpid = ?");
