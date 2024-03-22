@@ -28,14 +28,13 @@
                     $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                    $stmt = $pdo->prepare("SELECT MotionPicture.name, MotionPicture.rating
-                                           FROM MotionPicture 
-                                           JOIN Location ON MotionPicture.id = Location.mpid
-                                           JOIN Genre ON MotionPicture.id = Genre.mpid
-                                           WHERE Genre.genre_name = 'Thriller' 
-                                           AND Location.city = 'Boston' 
-                                           AND (SELECT COUNT(*) FROM Location WHERE mpid = MotionPicture.id) = 1
-                                           ORDER BY MotionPicture.rating DESC 
+                    $stmt = $pdo->prepare("SELECT DISTINCT MotionPicture.name, MotionPicture.rating
+                    FROM MotionPicture 
+                    JOIN Location ON MotionPicture.id = Location.mpid
+                    JOIN Genre ON MotionPicture.id = Genre.mpid
+                    WHERE Genre.genre_name = 'Thriller' 
+                    AND Location.city = 'Boston' 
+                    ORDER BY MotionPicture.rating DESC 
                                            LIMIT 2");
                     $stmt->execute();
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
