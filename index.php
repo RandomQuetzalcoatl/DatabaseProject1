@@ -19,7 +19,7 @@ try {
     // If user is logged in, fetch their likes
     $userLikes = [];
     if ($userLoggedIn) {
-        $stmt = $conn->prepare("SELECT MotionPicture.name FROM Likes JOIN MotionPicture ON Likes.mpid = MotionPicture.id WHERE Likes.email = ?");
+        $stmt = $conn->prepare("SELECT MotionPicture.name FROM Likes JOIN MotionPicture ON Likes.mpid = MotionPicture.id WHERE Likes.uemail = ?");
         $stmt->execute([$_SESSION['user_email']]);
         $userLikes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -81,7 +81,7 @@ try {
             <a href="query12.php" class="list-group-item list-group-item-action">Query 12</a>
             <a href="query13.php" class="list-group-item list-group-item-action">Query 13</a>
             <a href="query14.php" class="list-group-item list-group-item-action">Query 14</a>
-            <a href="query14.php" class="list-group-item list-group-item-action">Query 15</a>
+            <a href="query15.php" class="list-group-item list-group-item-action">Query 15</a>
         </div>
         <!-- Login/Register Button -->
         <div class="mt-4">

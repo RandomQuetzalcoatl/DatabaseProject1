@@ -189,11 +189,49 @@ INSERT INTO `guests` (`id`, `first_name`, `last_name`, `age`) VALUES
 --
 
 CREATE TABLE `Likes` (
-  `email` varchar(255) NOT NULL,
-  `mpid` int(20) NOT NULL
+  `mpid` int(20) NOT NULL,
+  `uemail` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
+
+INSERT INTO Likes (mpid, uemail) VALUES
+(101, 'aneesha@fb.com'),
+(201, 'aneesha@fb.com'),
+(104, 'aneesha@fb.com'),
+(110, 'ssarkar@bu.edu'),
+(105, 'ssarkar@bu.edu'),
+(109, 'ssarkar@bu.edu'),
+(206, 'ssarkar@bu.edu'),
+(203, 'ssarkar@bu.edu'),
+(101, 'ssarkar@bu.edu'),
+(108, 'jamiel@gmail.com'),
+(101, 'jamiel@gmail.com'),
+(109, 'jamiel@gmail.com'),
+(102, 'poly@gmail.com'),
+(210, 'poly@gmail.com'),
+(208, 'poly@gmail.com'),
+(104, 'poly@gmail.com'),
+(204, 'poly@gmail.com'),
+(107, 'jkumar@gmail.com'),
+(105, 'wildy@fb.com'),
+(109, 'wildy@fb.com'),
+(110, 'wildy@fb.com'),
+(210, 'wildy@fb.com'),
+(201, 'wildy@fb.com'),
+(202, 'wildy@fb.com'),
+(205, 'wildy@fb.com'),
+(205, 'natashar@gmail.com'),
+(207, 'natashar@gmail.com'),
+(202, 'natashar@gmail.com'),
+(108, 'natashar@gmail.com'),
+(105, 'lsararh@gmail.com'),
+(109, 'lsararh@gmail.com'),
+(110, 'azhu@gmail.com'),
+(209, 'azhu@gmail.com'),
+(107, 'azhu@gmail.com'),
+(103, 'azhu@gmail.com');
+
 
 --
 -- Table structure for table `Location`
@@ -554,7 +592,7 @@ ALTER TABLE `Genre`
 -- Indexes for table `Likes`
 --
 ALTER TABLE `Likes`
-  ADD PRIMARY KEY (`email`,`mpid`),
+  ADD PRIMARY KEY (`mpid`, `email`),
   ADD KEY `likemovie` (`mpid`);
 
 --
@@ -622,7 +660,7 @@ ALTER TABLE `Genre`
 --
 ALTER TABLE `Likes`
   ADD CONSTRAINT `likemovie` FOREIGN KEY (`mpid`) REFERENCES `MotionPicture` (`id`),
-  ADD CONSTRAINT `likeuser` FOREIGN KEY (`email`) REFERENCES `User` (`email`);
+  ADD CONSTRAINT `likeuser` FOREIGN KEY (`uemail`) REFERENCES `User` (`email`);
 
 --
 -- Constraints for table `Location`

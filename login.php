@@ -7,11 +7,10 @@ session_start();
 if(isset($_POST['loginUser'])) {
     // Login logic
     $email = $_POST['loginEmail'];
-    $password = $_POST['loginPassword'];
 
     // Additional fields
-    $name = $_POST['loginName'];
-    $age = $_POST['loginAge'];
+    $name = $_POST['name'];
+    $age = $_POST['age'];
 
     // Include name and age handling logic here if needed
 
@@ -19,11 +18,11 @@ if(isset($_POST['loginUser'])) {
         $conn = new PDO("mysql:host=localhost;dbname=COSI127b", "root", "");
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $stmt = $conn->prepare("SELECT email, password FROM User WHERE email = ?");
+        $stmt = $conn->prepare("SELECT email FROM User WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user) {
             // Login successful: Set session variables
             $_SESSION['user_email'] = $user['email'];
             // Store name and age in session or process them as needed
@@ -35,7 +34,7 @@ if(isset($_POST['loginUser'])) {
             header("Location: index.php");
             exit;
         } else {
-            echo "<div class='alert alert-danger'>Invalid email or password.</div>";
+            echo "<div class='alert alert-danger'>Invalid email.</div>";
         }
     } catch(PDOException $e) {
         echo "<div class='alert alert-danger'>Error: " . $e->getMessage() . "</div>";
@@ -45,7 +44,6 @@ if(isset($_POST['loginUser'])) {
 if(isset($_POST['registerUser'])) {
     // Registration logic
     $email = $_POST['registerEmail'];
-    $password = $_POST['registerPassword'];
 
     // Additional fields
     $name = $_POST['registerName'];
@@ -63,11 +61,8 @@ if(isset($_POST['registerUser'])) {
         if($checkStmt->fetch()) {
             echo "<div class='alert alert-warning'>User already exists.</div>";
         } else {
-            // Hash the password before storing it
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            // Modify INSERT statement to include name and age
-            $stmt = $conn->prepare("INSERT INTO User (email, password, name, age) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$email, $hashedPassword, $name, $age]);
+            $stmt = $conn->prepare("INSERT INTO User (email, name, age) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$email, $name, $age]);
             echo "<div class='alert alert-success'>Registration successful!</div>";
             // Log the user in (optional) and set session variables
             $_SESSION['user_email'] = $email;
@@ -99,10 +94,6 @@ if(isset($_POST['registerUser'])) {
                 <label for="loginEmail">Email address:</label>
                 <input type="email" class="form-control" id="loginEmail" name="loginEmail" required>
             </div>
-            <div class="form-group">
-                <label for="loginPassword">Password:</label>
-                <input type="password" class="form-control" id="loginPassword" name="loginPassword" required>
-            </div>
             <button type="submit" class="btn btn-primary" name="loginUser">Login</button>
         </form>
 
@@ -111,10 +102,6 @@ if(isset($_POST['registerUser'])) {
             <div class="form-group">
                 <label for="registerEmail">Email address:</label>
                 <input type="email" class="form-control" id="registerEmail" name="registerEmail" required>
-            </div>
-            <div class="form-group">
-                <label for="registerPassword">Password:</label>
-                <input type="password" class="form-control" id="registerPassword" name="registerPassword" required>
             </div>
             <div class="form-group">
                 <label for="registerName">Name:</label>
@@ -135,21 +122,20 @@ if(isset($_POST['registerUser'])) {
     if(isset($_POST['loginUser'])) {
         // Login logic
         $email = $_POST['loginEmail'];
-        $password = $_POST['loginPassword'];
 
         try {
             $conn = new PDO("mysql:host=localhost;dbname=COSI127b", "root", "");
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $stmt = $conn->prepare("SELECT email, password FROM User WHERE email = ?");
+            $stmt = $conn->prepare("SELECT email FROM User WHERE email = ?");
             $stmt->execute([$email]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($user && password_verify($password, $user['password'])) {
+            if ($user) {
                 echo "<div class='alert alert-success'>Login successful!</div>";
                 // Proceed with login logic (e.g., setting session variables)
             } else {
-                echo "<div class='alert alert-danger'>Invalid email or password.</div>";
+                echo "<div class='alert alert-danger'>Invalid email</div>";
             }
         } catch(PDOException $e) {
             echo "<div class='alert alert-danger'>Error: " . $e->getMessage() . "</div>";
@@ -159,7 +145,6 @@ if(isset($_POST['registerUser'])) {
     if(isset($_POST['registerUser'])) {
         // Registration logic
         $email = $_POST['registerEmail'];
-        $password = $_POST['registerPassword']; // In a real application, validate this!
 
         try {
             $conn = new PDO("mysql:host=localhost;dbname=COSI127b", "root", "");
@@ -171,12 +156,9 @@ if(isset($_POST['registerUser'])) {
             if($checkStmt->fetch()) {
                 echo "<div class='alert alert-warning'>User already exists.</div>";
             } else {
-                // Hash the password before storing it
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $conn->prepare("INSERT INTO User (email, password) VALUES (?, ?)");
-                $stmt->execute([$email, $hashedPassword]);
+                $stmt = $conn->prepare("INSERT INTO User (email) VALUES (?, ?)");
+                $stmt->execute([$email]);
                 echo "<div class='alert alert-success'>Registration successful!</div>";
-                // Proceed with login or additional registration logic
             }
         } catch(PDOException $e) {
             echo "<div class='alert alert-danger'>Error: " . $e->getMessage() . "</div>";
