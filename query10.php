@@ -34,8 +34,14 @@
                     JOIN Genre ON MotionPicture.id = Genre.mpid
                     WHERE Genre.genre_name = 'Thriller' 
                     AND Location.city = 'Boston' 
-                    ORDER BY MotionPicture.rating DESC 
-                                           LIMIT 2");
+                    AND NOT EXISTS (
+                        SELECT 1
+                        FROM Location AS notBoston
+                        WHERE notBoston.mpid = MotionPicture.id
+                        AND notBoston.city != 'Boston'
+                    )
+                    ORDER BY MotionPicture.rating DESC
+                    Limit 2");
                     $stmt->execute();
                     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
